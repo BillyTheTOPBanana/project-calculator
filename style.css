@@ -1,3 +1,47 @@
-.test-setup {
-    font-size: 99px;
+:root {
+    --BUTTON-SIZE: 100px;
+    --BUTTON-DOUBLE-SIZE: 200px;
+}
+
+* {
+    box-sizing: border-box;
+    font-size: 50px;
+
+    /* margin: 0; */
+}
+
+button {
+    display: block;
+    width: var(--BUTTON-SIZE);
+    height: var(--BUTTON-SIZE);
+}
+
+#add {
+    height: var(--BUTTON-DOUBLE-SIZE);
+}
+
+#equals {
+    height: var(--BUTTON-DOUBLE-SIZE);
+}
+
+#decimal-point {
+    width: var(--BUTTON-DOUBLE-SIZE);
+}
+
+#calculator {
+    width: fit-content;
+}
+
+#display {
+    text-align: right;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#plus-rows,
+#equals-rows {
+    display: flex;
+}
+
+.flex-container {
+    display: flex;
 }

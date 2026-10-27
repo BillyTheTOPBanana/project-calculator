@@ -8,6 +8,47 @@
     <title>Basic Calculator</title>
 </head>
 <body>
-    <span class="test-setup">test: Whooooooa big boy.</span>
+    <div id="calculator">
+        <div id="display">0</div>
+        <div id="top-row" class="flex-container">
+            <button id="clear"    class="operation">C</button>
+            <button id="divide"   class="operation">/</button>
+            <button id="multiply" class="operation">*</button>
+            <button id="subtract" class="operation">-</button>
+        </div>
+        <div id="plus-rows">
+            <div id="four-to-nine">
+                <div class="flex-container">
+                    <button id="digit7" class="digit">7</button>
+                    <button id="digit8" class="digit">8</button>
+                    <button id="digit9" class="digit">9</button>
+                </div>
+                <div class="flex-container">
+                    <button id="digit4" class="digit">4</button>
+                    <button id="digit5" class="digit">5</button>
+                    <button id="digit6" class="digit">6</button>
+                </div>
+            </div>
+            <div>
+                <button id="add" class="operation">+</button>
+            </div>
+        </div>
+        <div id="equals-rows">
+            <div id="zero-to-three">
+                <div class="flex-container">
+                    <button id="digit1" class="digit">1</button>
+                    <button id="digit2" class="digit">2</button>
+                    <button id="digit3" class="digit">3</button>
+                </div>
+                <div class="flex-container">
+                    <button id="digit0" class="digit">0</button>
+                    <button id="decimal-point">.</button>
+                </div>
+            </div>
+            <div>
+                <button id="equals">=</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
