@@ -1,3 +1,5 @@
+const MAX_DISPLAY_LENGTH = 9;
+
 const display = document.querySelector("#display");
 
 function add (a, b) {
@@ -27,8 +29,17 @@ function operate() {
     console.assert(operation_func !== undefined);
 
     let result = operation_func(operands.first, operands.second);
-    display.textContent = result;
+    // Note even though we are about to round the displayed result to fit the display area, we keep the more precise number internally.
     operands.first = result;
+    
+    let display_string = result.toString();
+    if (display_string.length > MAX_DISPLAY_LENGTH) {
+        const integer_length = Math.trunc(result).toString().length;
+        const place_to_round = MAX_DISPLAY_LENGTH - integer_length - 1; // The -1 is to accommodate the decimal point.
+        const rounded_result = Math.round(result * 10**place_to_round) / 10**place_to_round;
+        display_string = rounded_result.toString();
+    }
+    display.textContent = display_string;
 }
 
 function press_digit(id) {
