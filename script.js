@@ -15,11 +15,6 @@ function multiply (a, b) {
 }
 
 function divide (a, b) {
-    if (b === 0) {
-        // @DoLater: handle this robustly
-        console.log("Tried to divide by zero.");
-    }
-    // @DoLater: consider how to handle fractional outputs
     return a / b;
 }
 
@@ -28,7 +23,15 @@ function operate() {
     const operation_func = operations[operation_str];
     console.assert(operation_func !== undefined);
 
+    if (operation_func === divide && operands.second === 0) {
+        reset();
+        display.textContent = "/0? Fool!";
+
+        return;
+    }
+
     let result = operation_func(operands.first, operands.second);
+
     // Note even though we are about to round the displayed result to fit the display area, we keep the more precise number internally.
     operands.first = result;
     
@@ -90,7 +93,7 @@ document.querySelectorAll(".digit").forEach( (node) => {
                 operand_being_edited = "second";
                 operands.second = 0;
                 break;
-            case "just pressed equals":
+            case "just operated":
                 state = "typing number";
                 operand_being_edited = "first";
                 operands.first = 0;
@@ -117,7 +120,7 @@ document.querySelectorAll(".operation").forEach( (node) => {
                 break;
             case "choosing operation":
                 break;
-            case "just pressed equals":
+            case "just operated":
                 break;
             default:
                 console.assert(false);
@@ -133,25 +136,26 @@ document.querySelectorAll("#equals").forEach( (node) => {
         switch (state) {
             case "typing number":
                 if (operand_being_edited === "first") {
-                    ;
+                    ; // Do nothing.
                 }
                 else if (operand_being_edited === "second") {
                     operate();
+                    state = "just operated";
                 }
                 else console.assert(false);
                 break;
             case "choosing operation":
+                // This behavior of defaulting the second number to the first is a replication of the online calculator (https://www.calculatorsoup.com/calculators/math/basic.php) linked in TOP's lesson
                 operands.second = operands.first;
                 operate();
+                state = "just operated";
                 break;
-            case "just pressed equals":
+            case "just operated":
                 operate();
                 break;
             default:
                 console.assert(false);
         }
-        
-        state = "just pressed equals";
     });
 });
 
@@ -178,7 +182,7 @@ switch (state) {
         break;
     case "choosing operation":
         break;
-    case "just pressed equals":
+    case "just operated":
         break;
     default:
         console.assert(false);
