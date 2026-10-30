@@ -45,7 +45,16 @@ function operate() {
     display.textContent = display_string;
 }
 
-function press_digit(id) {
+function press_decimal_point() {
+    if (am_typing_decimal) 
+        return;
+    else {
+        am_typing_decimal = true;
+        display.textContent = operands[operand_being_edited].toString() + ".";
+    }
+}
+
+function press_numeric_digit(id) {
     let digit =
         id === "digit0" ? 0 :
         id === "digit1" ? 1 :
@@ -59,22 +68,38 @@ function press_digit(id) {
         id === "digit9" ? 9 :
         null;
 
-    operands[operand_being_edited] = 10 * operands[operand_being_edited] + digit;
+    if (am_typing_decimal) {
+        const current_number_str = operands[operand_being_edited].toString();
+        const current_decimal_length = current_number_str.includes(".") ? 
+            current_number_str.length - current_number_str.indexOf(".") - 1 : 
+            0;
+        operands[operand_being_edited] += digit * 10**(-1 * current_decimal_length - 1)
+    }
+    else {
+        operands[operand_being_edited] = operands[operand_being_edited] * 10 + digit;
+    }
     display.textContent = operands[operand_being_edited];
+}
+
+function press_digit(id) {
+    if (id === "decimal-point")
+        press_decimal_point();
+    else
+        press_numeric_digit(id);
 }
 
 function reset() {
     state = "typing number";
+    am_typing_decimal = false;
     operand_being_edited = "first";
     operands.first = 0;
     display.textContent = operands.first;
 }
 
-let operand_being_edited = "first";
-let state = "typing number";
-
 let operands = { first: 0, second: 0 };
 let operation_str;
+
+reset();
 
 document.querySelectorAll(".digit").forEach( (node) => {
     node.addEventListener("click", (e) => {
@@ -90,11 +115,13 @@ document.querySelectorAll(".digit").forEach( (node) => {
                 break;
             case "choosing operation":
                 state = "typing number";
+                am_typing_decimal = false;
                 operand_being_edited = "second";
                 operands.second = 0;
                 break;
             case "just operated":
                 state = "typing number";
+                am_typing_decimal = false;
                 operand_being_edited = "first";
                 operands.first = 0;
                 break;
@@ -159,13 +186,7 @@ document.querySelectorAll("#equals").forEach( (node) => {
     });
 });
 
-// @Todo: change syntax to find one thing
-document.querySelectorAll("#clear").forEach( (node) => {
-    node.addEventListener("click", (e) => {
-        reset();
-    });
-});
-
+document.querySelector("#clear").addEventListener("click", (e) => reset() );
 
 /*
 // copy this to check for state:
