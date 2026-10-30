@@ -23,17 +23,14 @@ function operate() {
     const operation_func = operations[operation_str];
     console.assert(operation_func !== undefined);
 
-    if (operation_func === divide && operands.second === 0) {
+    if (operation_func === divide && operands.second === "0") {
         reset();
         display.textContent = "/0? Fool!";
 
         return;
     }
 
-    let result = operation_func(operands.first, operands.second);
-
-    // Note even though we are about to round the displayed result to fit the display area, we keep the more precise number internally.
-    operands.first = result;
+    let result = operation_func( Number(operands.first), Number(operands.second) );
     
     let display_string = result.toString();
     if (display_string.length > MAX_DISPLAY_LENGTH) {
@@ -43,37 +40,40 @@ function operate() {
         display_string = rounded_result.toString();
     }
     display.textContent = display_string;
+    operands.first = display_string;
 }
 
 function press_digit(id) {
     let digit =
-        id === "digit0" ? 0 :
-        id === "digit1" ? 1 :
-        id === "digit2" ? 2 :
-        id === "digit3" ? 3 :
-        id === "digit4" ? 4 :
-        id === "digit5" ? 5 :
-        id === "digit6" ? 6 :
-        id === "digit7" ? 7 :
-        id === "digit8" ? 8 :
-        id === "digit9" ? 9 :
+        id === "digit0" ? "0" :
+        id === "digit1" ? "1" :
+        id === "digit2" ? "2" :
+        id === "digit3" ? "3" :
+        id === "digit4" ? "4" :
+        id === "digit5" ? "5" :
+        id === "digit6" ? "6" :
+        id === "digit7" ? "7" :
+        id === "digit8" ? "8" :
+        id === "digit9" ? "9" :
         null;
 
-    operands[operand_being_edited] = 10 * operands[operand_being_edited] + digit;
+    if (operands[operand_being_edited] === "0")
+        operands[operand_being_edited] = "";
+    operands[operand_being_edited] += digit;
     display.textContent = operands[operand_being_edited];
 }
 
 function reset() {
     state = "typing number";
     operand_being_edited = "first";
-    operands.first = 0;
+    operands.first = "0";
     display.textContent = operands.first;
 }
 
 let operand_being_edited = "first";
 let state = "typing number";
 
-let operands = { first: 0, second: 0 };
+let operands = { first: "0", second: "0" };
 let operation_str;
 
 document.querySelectorAll(".digit").forEach( (node) => {
@@ -91,12 +91,12 @@ document.querySelectorAll(".digit").forEach( (node) => {
             case "choosing operation":
                 state = "typing number";
                 operand_being_edited = "second";
-                operands.second = 0;
+                operands.second = "0";
                 break;
             case "just operated":
                 state = "typing number";
                 operand_being_edited = "first";
-                operands.first = 0;
+                operands.first = "0";
                 break;
             default:
                 console.assert(false);
