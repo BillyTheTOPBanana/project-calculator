@@ -33,33 +33,46 @@ function operate() {
     let result = operation_func( Number(operands.first), Number(operands.second) );
     
     let display_string = result.toString();
-    if (display_string.length > MAX_DISPLAY_LENGTH) {
+    if (display_string.length > MAX_DISPLAY_LENGTH && display_string.includes(".")) {
         const integer_length = Math.trunc(result).toString().length;
         const place_to_round = MAX_DISPLAY_LENGTH - integer_length - 1; // The -1 is to accommodate the decimal point.
         const rounded_result = Math.round(result * 10**place_to_round) / 10**place_to_round;
         display_string = rounded_result.toString();
     }
+    // Note we allow the display to expand for *large* numbers, i.e. numbers with a lot of digits before any decimal point.
+    // Handling large numbers would be a nice feature, but it's not part of the exercise.
     display.textContent = display_string;
+    
     operands.first = display_string;
 }
 
 function press_digit(id) {
     let digit =
-        id === "digit0" ? "0" :
-        id === "digit1" ? "1" :
-        id === "digit2" ? "2" :
-        id === "digit3" ? "3" :
-        id === "digit4" ? "4" :
-        id === "digit5" ? "5" :
-        id === "digit6" ? "6" :
-        id === "digit7" ? "7" :
-        id === "digit8" ? "8" :
-        id === "digit9" ? "9" :
-        null;
-
+        id === "digit0"        ? "0" :
+        id === "digit1"        ? "1" :
+        id === "digit2"        ? "2" :
+        id === "digit3"        ? "3" :
+        id === "digit4"        ? "4" :
+        id === "digit5"        ? "5" :
+        id === "digit6"        ? "6" :
+        id === "digit7"        ? "7" :
+        id === "digit8"        ? "8" :
+        id === "digit9"        ? "9" :
+        id === "decimal-point" ? "." :
+        null
+    ;
+    
+    if (operands[operand_being_edited].length >= MAX_DISPLAY_LENGTH)
+        return;
+    if (digit === "." && operands[operand_being_edited].includes("."))
+        return;
     if (operands[operand_being_edited] === "0")
         operands[operand_being_edited] = "";
+    
     operands[operand_being_edited] += digit;
+    
+    if (operands[operand_being_edited] === ".")
+        operands[operand_being_edited] = "0.";
     display.textContent = operands[operand_being_edited];
 }
 
@@ -156,7 +169,7 @@ document.querySelectorAll("#equals").forEach( (node) => {
             default:
                 console.assert(false);
         }
-    });
+    });``
 });
 
 // @Todo: change syntax to find one thing
