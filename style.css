@@ -43,7 +43,7 @@ button:active {
     width: var(--BUTTON-DOUBLE-SIZE);
 }
 
-#calculator {
+#calculator-main {
     width: fit-content;
 }
 

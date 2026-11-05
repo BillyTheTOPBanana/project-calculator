@@ -117,7 +117,6 @@ function press_digit(id) {
     
     append_digit(id);
 }
-
 document.querySelectorAll(".digit").forEach( (node) => {
     node.addEventListener("click", (e) => press_digit(e.target.id) );
 });
@@ -144,7 +143,6 @@ function press_operation(which) {
     state = "choosing operation";
     operation_str = which;
 }
-
 document.querySelectorAll(".operation").forEach( (node) => {
     node.addEventListener("click", (e) => press_operation(e.target.id) );
 });
@@ -174,8 +172,20 @@ function press_equals() {
             console.assert(false);
     }
 }
-
 document.querySelector("#equals").addEventListener("click", (e) => press_equals() );
+
+function press_backspace() {
+    console.log("press_backspace() called");
+    if (state === "typing number") {
+        console.log("deleting last letter...");
+        operands[operand_being_edited] = operands[operand_being_edited].substring(0, operands[operand_being_edited].length - 1);
+        if (operands[operand_being_edited] === "")
+            operands[operand_being_edited] = "0";
+        
+        display.textContent = operands[operand_being_edited];
+    }
+}
+document.querySelector("#backspace").addEventListener("click", (e) => press_backspace() );
 
 document.addEventListener("keydown", (e) => {
     switch (e.key) {
@@ -229,6 +239,9 @@ document.addEventListener("keydown", (e) => {
             break;
         case "Delete":
             reset();
+            break;
+        case "Backspace":
+            press_backspace();
             break;
     }
 });
